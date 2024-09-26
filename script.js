@@ -2,70 +2,58 @@ function player(name) {
   if (!name) {
     throw new Error("Player name must be set");
   }
-  return {
-    name,
-    turn: false,
-    won: false,
-  };
+
+  return { name, turn: false, won: false };
 }
 
 function gameBoard() {
-  let board = [
+  const board = [
     [null, null, null],
     [null, null, null],
     [null, null, null],
   ];
+
   return {
-    // Set a value in the board
-    set: (row, col, value) => {
-      // Validate inputs (selection can only be within the 3x3 grid)
+    set(row, col, value) {
       if (row < 0 || row > 2 || col < 0 || col > 2) {
         throw new Error("Row and column must be between 0 and 2");
       }
+
       if (board[row][col]) {
         throw new Error("That spot is already taken");
       }
-      // Selection passes validation, set the value in the board
+
       board[row][col] = value;
     },
-    // Check if a player has won
-    checkWin: (playerMark) => {
-      if (
+    checkWin(playerMark) {
+      for (let i = 0; i < 3; i++) {
         // check rows
-        (board[0][0] === playerMark &&
-          board[0][1] === playerMark &&
-          board[0][2] === playerMark) ||
-        (board[1][0] === playerMark &&
-          board[1][1] === playerMark &&
-          board[1][2] === playerMark) ||
-        (board[2][0] === playerMark &&
-          board[2][1] === playerMark &&
-          board[2][2] === playerMark) ||
+        if (playerMark === (board[0][i] && board[1][i] && board[2][i])) {
+          return true;
+        }
         // check columns
-        (board[0][0] === playerMark &&
-          board[1][0] === playerMark &&
-          board[2][0] === playerMark) ||
-        (board[0][1] === playerMark &&
-          board[1][1] === playerMark &&
-          board[2][1] === playerMark) ||
-        (board[0][2] === playerMark &&
-          board[1][2] === playerMark &&
-          board[2][2] === playerMark) ||
+        if (playerMark === (board[i][0] && board[i][1] && board[i][2])) {
+          return true;
+        }
         // check diagonals
-        (board[0][0] === playerMark &&
-          board[1][1] === playerMark &&
-          board[2][2] === playerMark) ||
-        (board[0][2] === playerMark &&
-          board[1][1] === playerMark &&
-          board[2][0] === playerMark)
-      ) {
-        return true;
+        if (
+          playerMark === (board[0][0] && board[1][1] && board[2][2]) ||
+          playerMark === (board[0][2] && board[1][1] && board[2][0])
+        ) {
+          return true;
+        }
       }
+
+      return false;
     },
-    print: () => {
-      if (!board) {
-        throw new Error("Game board must be set");
-      }
+    reset() {
+      board = [
+        [null, null, null],
+        [null, null, null],
+        [null, null, null],
+      ];
+    },
+    print() {
       console.log(
         "    col: 0 | 1 | 2\n" +
           "       _____________\n" +
@@ -81,57 +69,60 @@ function gameBoard() {
 }
 
 function startGame() {
-  // Initialize board
   const player1 = player("X");
   const player2 = player("O");
   const board = gameBoard();
-  let turn = 1;
-  if (!player1 || !player2 || !board) {
-    throw new Error("Player 1, Player 2, and Game Board must be set");
-  }
-  // Start game if tic tac toe
-  while (turn < 10 && !(player1.won || player2.won)) {
+
+  for (let turn = 1; turn < 10; turn++) {
     displayTurn(turn);
     board.print();
+
     const currentPlayer = turn % 2 === 0 ? player2 : player1;
     currentPlayer.turn = true;
+
     let row;
     let col;
-    // Get player row input
+
     do {
       const rowInput = prompt(
         `It's ${currentPlayer.name}'s turn. Pick a row (0, 1, or 2). Type 'q' to quit.`
       );
+
       if (rowInput.toLowerCase() === "q") {
         return;
       }
+
       row = +rowInput;
     } while (row < 0 || row > 2 || isNaN(row));
-    // Get player column input
+
     do {
       const colInput = prompt(
         `It's ${currentPlayer.name}'s turn. Pick a column (0, 1, or 2). Type 'q' to quit.`
       );
+
       if (colInput.toLowerCase() === "q") {
         return;
       }
+
       col = +colInput;
     } while (col < 0 || col > 2 || isNaN(col));
-    // Set player move
+
     try {
       board.set(row, col, currentPlayer.name);
     } catch (err) {
       alert(err.message);
       continue;
     }
+
     board.print();
-    // Check if player won
+
     if (board.checkWin(currentPlayer.name)) {
       console.log(`${currentPlayer.name} won!`);
       return;
     }
-    turn++;
   }
+
+  console.log("It's a tie!");
 }
 
 function playGame() {
