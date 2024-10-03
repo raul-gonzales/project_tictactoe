@@ -1,27 +1,18 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <script src="script.js" defer></script>
+    <title>Tic Tac Toe</title>
     <link rel="stylesheet" href="style.css">
-    <title>TIC to the TAC to the TOE</title>
 </head>
-
 <body>
-
-<div class="turn-counter">Turn: #</div>
-<div class="player-turn-title">Player #'s turn</div>
-
-<div class="gameboard-container">
-</div>
-
-<dialog class="start-game-container">
-  <button class="close-dialog">Close</button>
-</dialog>
-
-
+    <div class="game-container">
+        <h1>Tic Tac Toe</h1>
+        <div id="board" class="board"></div>
+        <button id="restartButton">Restart Game</button>
+        <div id="status"></div>
+    </div>
+    <script src="script.js" defer></script>
 </body>
-
 </html>

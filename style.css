@@ -1,16 +1,19 @@
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
-
 body {
-  font-family: sans-serif;
+  font-family: Arial, sans-serif;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  margin: 0;
   background-color: rgb(59, 143, 97);
   color: white;
 }
 
-div.gameboard-container {
+.game-container {
+  text-align: center;
+}
+
+.board {
   display: grid;
   padding: 10px;
   grid-template-columns: repeat(3, 1fr);
@@ -21,7 +24,7 @@ div.gameboard-container {
   gap: 0.5rem;
 }
 
-div.gameboard-cell {
+.cell {
   display: flex;
   background-color: rgb(34, 60, 113);
   border-radius: 0.5rem;
@@ -30,33 +33,19 @@ div.gameboard-cell {
   font-size: 5rem;
 }
 
-div.gameboard-cell:hover {
+.cell:hover {
   cursor: pointer;
   transform: scale(1.09);
+  box-shadow: 0 0 10px rgb(0, 229, 255);
 }
 
-dialog {
-  border: none;
-  border-radius: 8px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-  padding: 20px;
-  width: 300px;
-  position: fixed;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
+#status {
+  margin-top: 20px;
+  font-size: 1.5em;
 }
 
-dialog::backdrop {
-  background: rgba(0, 0, 0, 0.5);
-}
-
-dialog > .close-dialog {
-  display: block;
-  border: none;
-  border-radius: 8px;
+button {
+  margin-top: 10px;
   padding: 10px 20px;
-  font-weight: bold;
-  cursor: pointer;
-  margin: 20px auto;
+  font-size: 1em;
 }
