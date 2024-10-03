@@ -13,6 +13,8 @@ function gameBoard() {
     [null, null, null],
   ];
 
+  let turnCount = 0;
+
   return {
     set(row, col, value) {
       if (row < 0 || row > 2 || col < 0 || col > 2) {
@@ -70,6 +72,7 @@ function gameBoard() {
         [null, null, null],
         [null, null, null],
       ];
+      turnCount = 0;
     },
     print() {
       console.log(
@@ -83,6 +86,9 @@ function gameBoard() {
             .join("\n")
       );
     },
+    displayTurn() {
+      console.log(`Turn ${turnCount}`);
+    },
   };
 }
 
@@ -92,7 +98,7 @@ function startGame() {
   const board = gameBoard();
 
   for (let turn = 1; turn < 10; turn++) {
-    displayTurn(turn);
+    board.displayTurn(turn);
     board.print();
 
     const currentPlayer = turn % 2 === 0 ? player2 : player1;
@@ -150,6 +156,27 @@ function playGame() {
   }
 }
 
-function displayTurn(turn) {
-  console.log(`Turn ${turn}`);
+// Get elements from the DOM
+const gameboardContainer = document.querySelector(".gameboard-container");
+const dialog = document.querySelector(".start-game-container");
+const closeDialogButton = document.querySelector(".close-dialog");
+
+// Create game cells
+for (let i = 0; i < 9; i++) {
+  const cell = document.createElement("div");
+  cell.classList.add("gameboard-cell");
+  gameboardContainer.appendChild(cell);
 }
+
+// Show the dialog when the page loads
+window.onload = () => {
+  dialog.showModal();
+};
+
+// Close the dialog when the button is clicked
+closeDialogButton.addEventListener("click", () => {
+  dialog.close();
+  playGame();
+});
+
+
