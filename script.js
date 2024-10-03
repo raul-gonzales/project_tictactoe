@@ -15,60 +15,41 @@ function gameBoard() {
     [null, null, null],
     [null, null, null],
   ];
+  
   return {
     set: (row, col, value) => {
       if (row < 0 || row > 2 || col < 0 || col > 2) {
-        throw new Error("Row and column must be between 0 and 2");
+        return "Row and column must be between 0 and 2";
       }
       if (board[row][col]) {
-        throw new Error("That spot is already taken");
+        return "That spot is already taken";
       }
       board[row][col] = value;
+      return null; // No error
     },
     // Check if a player has won
     checkWin: (playerMark) => {
-      if (
-        // check rows
-        (board[0][0] === playerMark &&
-          board[0][1] === playerMark &&
-          board[0][2] === playerMark) ||
-        (board[1][0] === playerMark &&
-          board[1][1] === playerMark &&
-          board[1][2] === playerMark) ||
-        (board[2][0] === playerMark &&
-          board[2][1] === playerMark &&
-          board[2][2] === playerMark) ||
-        // check columns
-        (board[0][0] === playerMark &&
-          board[1][0] === playerMark &&
-          board[2][0] === playerMark) ||
-        (board[0][1] === playerMark &&
-          board[1][1] === playerMark &&
-          board[2][1] === playerMark) ||
-        (board[0][2] === playerMark &&
-          board[1][2] === playerMark &&
-          board[2][2] === playerMark) ||
-        // check diagonals
-        (board[0][0] === playerMark &&
-          board[1][1] === playerMark &&
-          board[2][2] === playerMark) ||
-        (board[0][2] === playerMark &&
-          board[1][1] === playerMark &&
-          board[2][0] === playerMark)
-      ) {
-        return true;
-      }
+      return (
+        // Check rows
+        (board[0][0] === playerMark && board[0][1] === playerMark && board[0][2] === playerMark) ||
+        (board[1][0] === playerMark && board[1][1] === playerMark && board[1][2] === playerMark) ||
+        (board[2][0] === playerMark && board[2][1] === playerMark && board[2][2] === playerMark) ||
+        // Check columns
+        (board[0][0] === playerMark && board[1][0] === playerMark && board[2][0] === playerMark) ||
+        (board[0][1] === playerMark && board[1][1] === playerMark && board[2][1] === playerMark) ||
+        (board[0][2] === playerMark && board[1][2] === playerMark && board[2][2] === playerMark) ||
+        // Check diagonals
+        (board[0][0] === playerMark && board[1][1] === playerMark && board[2][2] === playerMark) ||
+        (board[0][2] === playerMark && board[1][1] === playerMark && board[2][0] === playerMark)
+      );
     },
     print: () => {
       console.log(
         "    col: 0 | 1 | 2\n" +
-          "       _____________\n" +
-          board
-            .map(
-              (row, i) =>
-                `row: ${i} | ${row.map((cell) => cell || " ").join(" | ")}`
-            )
-            .join("\n")
+        "       _____________\n" +
+        board.map(
+          (row, i) => `row: ${i} | ${row.map((cell) => cell || " ").join(" | ")}`
+        ).join("\n")
       );
     },
   };
@@ -105,20 +86,23 @@ function handleCellClick(event) {
 
   const currentPlayer = turn % 2 === 0 ? player2 : player1;
 
-  try {
-    board.set(row, col, currentPlayer.name);
-    event.target.textContent = currentPlayer.name;
-    if (board.checkWin(currentPlayer.name)) {
-      statusElement.textContent = `${currentPlayer.name} wins!`;
-      currentPlayer.won = true;
-      return;
-    }
-    turn++;
-    if (turn > 9) {
-      statusElement.textContent = "It's a tie!";
-    }
-  } catch (err) {
-    alert(err.message);
+  const errorMessage = board.set(row, col, currentPlayer.name);
+  if (errorMessage) {
+    statusElement.textContent = errorMessage; // Update status with the error message
+    return;
+  }
+
+  event.target.textContent = currentPlayer.name;
+
+  if (board.checkWin(currentPlayer.name)) {
+    statusElement.textContent = `${currentPlayer.name} wins!`;
+    currentPlayer.won = true;
+    return;
+  }
+  
+  turn++;
+  if (turn > 9) {
+    statusElement.textContent = "It's a tie!";
   }
 }
 
